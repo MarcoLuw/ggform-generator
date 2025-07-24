@@ -33,7 +33,7 @@ This project creates Google Forms multiple-choice quizzes from JSON question dat
    - Create a new project or select existing one
    - Enable the Google Forms API
    - Create OAuth 2.0 credentials (Desktop application)
-   - Download the credentials and save as `credentials.json` in the project root
+   - Download the credentials and save as `credentials.json` in the creds/ directory
 
 ## Complete Workflow
 
