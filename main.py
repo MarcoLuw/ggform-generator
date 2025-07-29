@@ -342,31 +342,177 @@ class MCQFormGenerator:
             'questions_added': success_count,
             'total_questions': len(questions)
         }
+    
+    def create_combined_mcq_form_from_multiple_json(self, json_file_paths, form_title=None, form_description=""):
+        """Create a single MCQ form combining questions from multiple JSON files."""
+        # Authenticate
+        self.authenticate()
+        if not self.credentials:
+            print("Authentication failed!")
+            return None
+        
+        # Load and combine all questions
+        combined_questions = []
+        file_info = []
+        
+        for json_file_path in json_file_paths:
+            questions = self.load_questions(json_file_path)
+            if questions:
+                combined_questions.extend(questions)
+                filename = Path(json_file_path).stem
+                file_info.append(f"{filename} ({len(questions)} questions)")
+            else:
+                print(f"Warning: No questions loaded from {json_file_path}")
+        
+        if not combined_questions:
+            print("No questions found in any of the provided files!")
+            return None
+        
+        # Generate form title if not provided
+        if not form_title:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+            form_title = f"Combined MCQ Quiz ({len(json_file_paths)} files, {len(combined_questions)} questions) - {timestamp}"
+        
+        # Add file info to description
+        files_summary = "Sources: " + " | ".join(file_info)
+        if form_description:
+            form_description = f"{form_description}\n\n{files_summary}"
+        else:
+            form_description = files_summary
+        
+        # Create the form
+        form = self.create_quiz_form(form_title, form_description)
+        if not form:
+            return None
+        
+        form_id = form['formId']
+        
+        # Configure quiz settings
+        print("Configuring quiz settings...")
+        if not self.configure_quiz_settings(form_id):
+            print("Warning: Failed to configure quiz settings")
+        
+        # Add all questions in batch
+        print(f"Adding {len(combined_questions)} questions from {len(json_file_paths)} files in batch...")
+        if self.add_all_questions_batch(form_id, combined_questions):
+            success_count = len(combined_questions)
+            print(f"Successfully added all {success_count} questions!")
+        else:
+            success_count = 0
+            print("Failed to add questions. Trying individual approach as fallback...")
+            
+            # Fallback: Add questions one by one
+            for i, question_data in enumerate(combined_questions):
+                if self.add_mcq_question(form_id, question_data, i):
+                    success_count += 1
+        
+        print(f"\n=== COMBINED FORM CREATION SUMMARY ===")
+        print(f"Form Title: {form_title}")
+        print(f"Source Files: {len(json_file_paths)}")
+        for i, file_path in enumerate(json_file_paths, 1):
+            print(f"  {i}. {file_path}")
+        print(f"Questions Added: {success_count}/{len(combined_questions)}")
+        print(f"Form ID: {form_id}")
+        print(f"Edit URL: https://docs.google.com/forms/d/{form_id}/edit")
+        print(f"Response URL: {form['responderUri']}")
+        print(f"Assessment: Enabled with explanations after submission")
+        
+        return {
+            'form_id': form_id,
+            'edit_url': f"https://docs.google.com/forms/d/{form_id}/edit",
+            'response_url': form['responderUri'],
+            'questions_added': success_count,
+            'total_questions': len(combined_questions),
+            'source_files': json_file_paths
+        }
 
 
 def main():
     """Main function to handle command line arguments and create forms."""
-    parser = argparse.ArgumentParser(description='Create Google Forms MCQ quizzes from JSON data')
-    parser.add_argument('json_file', help='Path to JSON file containing questions')
+    parser = argparse.ArgumentParser(description='Create a single Google Forms MCQ quiz from one or multiple JSON data files')
+    parser.add_argument('json_files', nargs='?', help='Path(s) to JSON file(s) containing questions. Use comma-separated for multiple files: file1.json,file2.json')
     parser.add_argument('--title', '-t', help='Form title (optional)')
     parser.add_argument('--description', '-d', default='', help='Form description (optional)')
+    parser.add_argument('--directory', '-r', help='Directory path containing JSON files. All JSON files in the directory will be combined into one form')
     
     args = parser.parse_args()
     
-    # Validate JSON file path
-    if not os.path.exists(args.json_file):
-        print(f"Error: File {args.json_file} does not exist!")
+    # Check if either json_files or directory is provided
+    if not args.json_files and not args.directory:
+        print("Error: You must provide either JSON files or a directory path.")
+        print("Usage examples:")
+        print("  python main.py file1.json,file2.json")
+        print("  python main.py -r /path/to/directory")
+        return 1
+    
+    # If directory is provided, get all JSON files from it
+    if args.directory:
+        if not os.path.exists(args.directory):
+            print(f"Error: Directory '{args.directory}' does not exist.")
+            return 1
+        
+        if not os.path.isdir(args.directory):
+            print(f"Error: '{args.directory}' is not a directory.")
+            return 1
+        
+        # Find all JSON files in the directory
+        json_files_in_dir = []
+        for file in os.listdir(args.directory):
+            if file.lower().endswith('.json'):
+                json_files_in_dir.append(os.path.join(args.directory, file))
+        
+        if not json_files_in_dir:
+            print(f"Error: No JSON files found in directory '{args.directory}'.")
+            return 1
+        
+        # Sort files for consistent ordering
+        json_file_paths = sorted(json_files_in_dir)
+        print(f"Found {len(json_file_paths)} JSON files in directory '{args.directory}':")
+        for i, file_path in enumerate(json_file_paths, 1):
+            print(f"  {i}. {os.path.basename(file_path)}")
+        
+    else:
+        # Parse multiple file paths from command line argument
+        json_file_paths = [path.strip() for path in args.json_files.split(',')]
+    
+    # Validate all JSON file paths
+    missing_files = []
+    for file_path in json_file_paths:
+        if not os.path.exists(file_path):
+            missing_files.append(file_path)
+    
+    if missing_files:
+        print(f"Error: The following files do not exist:")
+        for file_path in missing_files:
+            print(f"  - {file_path}")
         return 1
     
     # Create form generator
     generator = MCQFormGenerator()
     
-    # Create the form
-    result = generator.create_mcq_form_from_json(
-        json_file_path=args.json_file,
-        form_title=args.title,
-        form_description=args.description
-    )
+    total_files = len(json_file_paths)
+    
+    if total_files == 1:
+        # Single file - use the single file method
+        print(f"Creating form from single file: {json_file_paths[0]}")
+        
+        result = generator.create_mcq_form_from_json(
+            json_file_path=json_file_paths[0],
+            form_title=args.title,
+            form_description=args.description
+        )
+    else:
+        # Multiple files - combine into one form
+        if args.directory:
+            print(f"Combining {total_files} JSON files from directory '{args.directory}' into one form...")
+        else:
+            print(f"Combining {total_files} files into one form...")
+        
+        result = generator.create_combined_mcq_form_from_multiple_json(
+            json_file_paths=json_file_paths,
+            form_title=args.title,
+            form_description=args.description
+        )
     
     if result:
         print(f"\n✅ Form created successfully!")
@@ -382,8 +528,11 @@ if __name__ == "__main__":
         print("=== MCQ Form Generator ===")
         print("\nUsage examples:")
         print("python main.py material/questions/05-07-2025/1.json")
+        print("python main.py material/questions/05-07-2025/1.json,material/questions/05-07-2025/2.json")
         print("python main.py material/questions/05-07-2025/1.json --title 'IELTS Reading Quiz'")
-        print("python main.py material/questions/05-07-2025/1.json --title 'Vocabulary Test' --description 'Test your vocabulary knowledge'")
+        print("python main.py file1.json,file2.json,file3.json --title 'Combined Quiz' --description 'Test your knowledge'")
+        print("python main.py -r material/questions/05-07-2025/ --title 'Directory Quiz'")
+        print("python main.py --directory material/questions/05-07-2025/")
         
         # For demonstration, use the provided file
         default_file = "material/questions/05-07-2025/1.json"

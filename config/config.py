@@ -15,7 +15,7 @@ OAUTH_PORT = 50699
 REQUEST_TIMEOUT = 30
 
 # File paths (relative to project root)
-CSV_FILE_PATH="material/vocabulary.csv"
+CSV_FILE_PATH="material/reading.csv"
 JSON_PATH_DIR="material/json"
 
 QUESTIONS_DIR = "material/questions"

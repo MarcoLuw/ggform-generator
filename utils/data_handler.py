@@ -1,9 +1,12 @@
 import csv
+import sys
 import os
 import json
 from collections import defaultdict
 from datetime import datetime
 from pprint import pprint
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import JSON_PATH_DIR, CSV_FILE_PATH
 
 def build_vocabulary_dict(csv_file_path) -> dict:

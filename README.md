@@ -7,7 +7,7 @@ This project creates Google Forms multiple-choice quizzes from JSON question dat
 - ✅ **Automated MCQ Form Creation**: Convert JSON question files to Google Forms
 - 📊 **Assessment & Scoring**: Automatic grading with point values
 - 💡 **Explanations**: Detailed feedback shown after form submission
-- 🔄 **Batch Processing**: Handle multiple question files at once
+- 🔄 **Multiple File Support**: Combine multiple question files into a single form
 - 📝 **CSV to JSON Processing**: Convert vocabulary CSV files to organized JSON format
 - 📅 **Date-based Organization**: Automatically organize vocabulary by date
 - 🤖 **LLM Question Generation**: Generate MCQ questions using AI prompts
@@ -142,30 +142,27 @@ material/questions/
 #### Basic Usage
 
 ```bash
-# Create form from specific JSON question file
+# Create form from single JSON question file
 python main.py material/questions/05-07-2025/vocabulary_quiz_1.json
+
+# Create form from multiple files (combined into one form)
+python main.py material/questions/05-07-2025/vocabulary_quiz_1.json,material/questions/05-07-2025/vocabulary_quiz_2.json
 
 # Create form with custom title
 python main.py material/questions/05-07-2025/vocabulary_quiz_1.json --title "IELTS Vocabulary Quiz"
 
-# Create form with title and description
-python main.py path/to/your/questions.json --title "Reading Test" --description "Test your comprehension skills"
+# Create combined form with multiple files, custom title and description
+python main.py file1.json,file2.json,file3.json --title "Combined Quiz" --description "Test your knowledge"
 ```
 
-#### Direct Python Usage
+#### Multiple File Support
 
-```python
-from main import MCQFormGenerator
+The application automatically combines questions from multiple JSON files into a single Google Form:
 
-generator = MCQFormGenerator()
-result = generator.create_mcq_form_from_json(
-    json_file_path="material/questions/05-07-2025/vocabulary_quiz_1.json",
-    form_title="My Quiz",
-    form_description="Quiz description"
-)
-
-print(f"Form URL: {result['response_url']}")
-```
+- **Single File**: Creates a form with questions from that file
+- **Multiple Files**: Combines all questions into one comprehensive form
+- **File Information**: Shows source files and question count in the form description
+- **Question Order**: Questions are added in the order of files provided
 
 ## Data Formats
 
@@ -255,6 +252,7 @@ ggform-generator/
    ```bash
    # Place your vocabulary CSV in material/
    # Configure CSV_FILE_PATH in config/config.py
+   # Install credentials.json in creds/ directory
    ```
 
 2. **Process CSV to JSON**:
@@ -273,7 +271,11 @@ ggform-generator/
 
 4. **Create Google Forms**:
    ```bash
+   # Single file
    python main.py material/questions/05-07-2025/quiz1.json --title "IELTS Vocabulary Quiz"
+   
+   # Multiple files combined into one form
+   python main.py material/questions/05-07-2025/quiz1.json,material/questions/05-07-2025/quiz2.json --title "Comprehensive IELTS Quiz"
    ```
 
 5. **Share and Use**:
@@ -290,6 +292,7 @@ The generated forms include:
 2. **Immediate Feedback**: Explanations shown after submission
 3. **Quiz Mode**: Proper Google Forms quiz configuration
 4. **Correct Answer Revelation**: Students see correct answers after submission
+5. **Source Tracking**: Form description shows which files were used to generate questions
 
 ## Authentication Flow
 
@@ -307,6 +310,7 @@ The application handles:
 - ❌ Invalid question data
 - ❌ CSV parsing errors
 - ❌ Missing vocabulary fields
+- ❌ Multiple file processing errors
 
 ## Command Line Options
 
@@ -315,15 +319,20 @@ The application handles:
 python utils/data_handler.py
 
 # Form generation
-python main.py <json_file> [options]
+python main.py <json_files> [options]
 
 Arguments:
-  json_file              Path to JSON questions file
+  json_files            Path(s) to JSON question file(s). Use comma-separated for multiple files
 
 Options:
   --title, -t           Custom form title
   --description, -d     Form description
   --help, -h           Show help message
+
+Examples:
+  python main.py questions.json
+  python main.py file1.json,file2.json,file3.json
+  python main.py quiz1.json,quiz2.json --title "Combined Quiz"
 ```
 
 ## Example Output
@@ -338,9 +347,13 @@ Processing complete! Generated JSON files for 150 vocabulary entries.
 2. Use prompt in: docs/questionGeneratedPrompt.md
 3. Save LLM output to: material/questions/05-07-2025/quiz1.json
 
-=== FORM CREATION SUMMARY ===
-Form Title: IELTS Vocabulary Quiz
-Questions Added: 20/20
+=== COMBINED FORM CREATION SUMMARY ===
+Form Title: Comprehensive IELTS Vocabulary Quiz
+Source Files: 3
+  1. material/questions/05-07-2025/quiz1.json
+  2. material/questions/05-07-2025/quiz2.json
+  3. material/questions/09-07-2025/quiz1.json
+Questions Added: 60/60
 Form ID: 1a2b3c4d5e6f7g8h9i0j
 Edit URL: https://docs.google.com/forms/d/1a2b3c4d5e6f7g8h9i0j/edit
 Response URL: https://docs.google.com/forms/d/e/1FAIpQL.../viewform
@@ -377,6 +390,11 @@ Assessment: Enabled with explanations after submission
    - Check internet connection
    - Verify Google Cloud project is active
 
+7. **Multiple file errors**
+   - Ensure all specified files exist
+   - Check file paths are correct
+   - Verify JSON format in all files
+
 ## Tips for Better Results
 
 ### For LLM Question Generation:
@@ -388,7 +406,14 @@ Assessment: Enabled with explanations after submission
 ### For Google Forms:
 - Use descriptive titles and descriptions for better student engagement
 - Test forms before sharing with students
-- Consider creating multiple shorter quizzes rather than one long quiz
+- Consider combining related question files for comprehensive assessments
+- Use multiple smaller files to organize questions by topic or difficulty
+
+### For Multiple File Processing:
+- Organize question files by topic, date, or difficulty level
+- Use meaningful file names for better organization
+- Combine files strategically to create balanced quizzes
+- Keep individual files focused on specific learning objectives
 
 ## Contributing
 

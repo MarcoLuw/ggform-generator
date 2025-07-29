@@ -10,13 +10,14 @@ The user will provide a list of vocabulary items in the following JSON format:
   "Meaning": "to make something strong, fixed, or permanent",
   "Collocation": "Cement someone’s status - to firmly confirm their reputation, success, or position\n\n(Củng cố vị thế của ai đó)",
   "Context": "Her latest win cemented her status as a top athlete.\n→ The win confirmed and strengthened her reputation.\n\nThe luxury and exclusivity cements Via Monte Napoleone's status as a premier shopping destination.",
-  "IPA": null,
+  "IPA": "/səˈment/",
+  "Synonym": "confirm, strengthen",
   "Time": "05/07/2025"
 }
 
 ## Requirements:
 - Create one MCQ per vocabulary item.
-- Use the **Vocabulary**, **Meaning**, **Collocation**, and **Context** fields to construct the question.
+- Use the **Vocabulary**, **Meaning**, **Collocation**, **Context** and **Synonym** fields to construct the question.
 - Be creative: vary the question format (e.g., choose the best synonym, complete the sentence, find the best usage).
 - Each question must be understandable, educational, and help reinforce meaning and usage.
 - Use realistic, age-appropriate contexts. Avoid outdated, awkward, or overly complex wording.
@@ -25,8 +26,7 @@ The user will provide a list of vocabulary items in the following JSON format:
 - Avoid repeated or overly similar options.
 
 ## Output Format:
-Return the MCQs as a list of JSON objects in the following format:
-
+- Return the MCQs as a list of JSON objects in the following format:
 [
   {
     "question": "Your question here...",
@@ -41,6 +41,9 @@ Return the MCQs as a list of JSON objects in the following format:
   },
   ...
 ]
+- No additional text or formatting, just the JSON list.
+- If any doubles quotes are present in the json output, except for the keys and values, they must be changed to single quotes.
+- Remove any unnecessary whitespace or newlines in the output.
 
 ## Example Guidance for the AI (if helpful):
 - Use clues from the **Collocation** and **Context** fields to build realistic, scenario-based questions.
@@ -51,163 +54,59 @@ Begin generating MCQs from the provided vocabulary list:
 
 [
     {
-        "Meaning": "To be positioned snugly or securely in a place, often surrounded or protected by something.",
-        "Collocation": "nestle somewhere",
-        "Context": "Bregenz is a pretty Austrian town that nestles between the Alps and Lake Constance",
-        "IPA": "/ˈnes.əl/",
-        "Time": "05/07/2025",
-        "Vocabulary": "nestle (v)"
+        "Meaning": "a typical characteristic or feature of a person or thing",
+        "Collocation": "have the hallmarks of",
+        "Context": "It has all the hallmarks of a successful movie.\n\nKindness is a hallmark of great leaders.\n→ Kindness is a defining quality that great leaders usually have\n\nThis ring has a hallmark showing it’s pure gold.\n→ A mark of authenticity or quality",
+        "IPA": "/ˈhɑːl.mɑːrk/",
+        "Time": "09/07/2025",
+        "Vocabulary": "hallmark (n)"
     },
     {
-        "Meaning": "a street, often a wide one, in a city or town\n\nđại lộ",
+        "Meaning": "a thing or person that prevents something bad from happening",
         "Collocation": null,
-        "Context": "New York avenue has become a beacon for luxury",
-        "IPA": "/ˈæv.ə.nuː/",
-        "Time": "05/07/2025",
-        "Vocabulary": "avenue (n)"
+        "Context": "tumor suppressor - thuốc ngăn chặn khối u",
+        "IPA": "/səˈpres.ɚ/",
+        "Time": "09/07/2025",
+        "Vocabulary": "suppressor (n)"
     },
     {
-        "Meaning": "to attract attention or interest",
-        "Collocation": "draw someone’s attention to something",
-        "Context": "The vibrant avenue draws fashion enthusiasts and high society attention from around the globe",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "draw (v)"
+        "Meaning": "đột biến",
+        "Collocation": null,
+        "Context": "These bacteria have mutated into forms that are resistant to certain drugs.",
+        "IPA": "/mjuːˈteɪt/",
+        "Time": "09/07/2025",
+        "Vocabulary": "mutate (v)"
     },
     {
         "Meaning": null,
         "Collocation": null,
         "Context": null,
         "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "fashion enthusiasts"
+        "Time": "09/07/2025",
+        "Vocabulary": "mutation (n)"
     },
     {
-        "Meaning": "rich, powerful, and fashionable people\n\ngiới thượng lưu",
+        "Meaning": "the essential foundation or most important element",
         "Collocation": null,
-        "Context": null,
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "high society"
+        "Context": "Trust is the cornerstone of any healthy relationship. \n→ Trust is the most essential part.",
+        "IPA": "/ˈkɔːr.nɚ.stoʊn/",
+        "Time": "09/07/2025",
+        "Vocabulary": "cornerstone (n)"
     },
     {
-        "Meaning": "energetic, exciting, and full of enthusiasm",
+        "Meaning": "to carefully judge, examine, or measure something",
         "Collocation": null,
-        "Context": "a vibrant city\na vibrant avenue\na vibrant young performer",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "vibrant (adj)"
+        "Context": "The teacher will assess your writing skills.\n→ She will examine and judge how good they are.\n\nWe need to assess the damage after the storm.\n→ To estimate how serious it is\n\nDoctors are trained to assess a patient’s condition quickly.",
+        "IPA": "/əˈses/",
+        "Time": "09/07/2025",
+        "Vocabulary": "assess (v)"
     },
     {
-        "Meaning": "go beyond, exceed, or do better than someone or something",
+        "Meaning": "support, strength, or the basic structure of something",
         "Collocation": null,
-        "Context": "He hopes to surpass his rival in the next race.\n\n→ He wants to beat his competitor.",
-        "IPA": "/sɚˈpæs/",
-        "Time": "05/07/2025",
-        "Vocabulary": "surpass"
-    },
-    {
-        "Meaning": "something is believed to be caused by or the result of something else",
-        "Collocation": "[Effect] is attributed to [Cause]",
-        "Context": "His success is attributed to hard work and determination.\n→ (He wants to beat his competitor.)\n\nThis surge is attributed to the street’s limited space\n→ Mức tăng này được cho là do diện tích hạn chế của con phố",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "be attributed to"
-    },
-    {
-        "Meaning": "limited access, special rights\n\nthe right to have or do something that is limited to only one person or organization\n\ntính độc quyền",
-        "Collocation": null,
-        "Context": "The company has an exclusivity agreement with that supplier.\n→ Only that company can buy from the supplier — no competitors allowed.",
-        "IPA": "/ˌeks.kluːˈsɪv.ə.t̬i/",
-        "Time": "05/07/2025",
-        "Vocabulary": "exclusivity (n)"
-    },
-    {
-        "Meaning": "to rise very quickly to a high level",
-        "Collocation": null,
-        "Context": "Gold prices have soared in 2025.\n→ Prices increased a lot and quickly.",
-        "IPA": "/sɔːr/",
-        "Time": "05/07/2025",
-        "Vocabulary": "soar (v)"
-    },
-    {
-        "Meaning": "to add something decorative to a person or thing",
-        "Collocation": "be adorned with",
-        "Context": "The bride's hair was adorned with white flowers.\n\nThe street is adorned with flagship stores of renowned luxury brands such as Fendi, Prada, Gucci, and Chanel",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "adorn (v)"
-    },
-    {
-        "Meaning": "the biggest or most important shop that a company owns",
-        "Collocation": null,
-        "Context": null,
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "flagship store"
-    },
-    {
-        "Meaning": "famous for something",
-        "Collocation": null,
-        "Context": "The region is renowned for its outstanding natural beauty.\n\nDucati is one of the most renowned brands in the world",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "renowned (adj)"
-    },
-    {
-        "Meaning": "something is worth the time, effort, or money spent on it",
-        "Collocation": null,
-        "Context": "That movie was really worthwhile.\n→ It was a good use of time — enjoyable or meaningful.\n\nIt wasn’t easy, but the experience was worthwhile.\n→ The results or lessons made the effort worth it.\n\na worthwhile investment",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "worthwhile (adj)"
-    },
-    {
-        "Meaning": "the quality of being attractive, interesting, or exciting",
-        "Collocation": null,
-        "Context": "The allure of the city lights drew him in.\n→ The city lights had an irresistible charm.\n\nThe Via Monte Napoleone avenue has its own retail allure.\n→ Đại lộ Monte có một sức hấp dẫn về bán lẻ của chính nó",
-        "IPA": "/əˈlʊr/",
-        "Time": "05/07/2025",
-        "Vocabulary": "allure (n)"
-    },
-    {
-        "Meaning": "to support, improve or strengthen something",
-        "Collocation": null,
-        "Context": "She tried to bolster my confidence/morale \n→ encourage me and make me feel stronger\n\nMilan’s vibrant fashion scene is bolstered by international fashion weeks and design events",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "bolster (v)"
-    },
-    {
-        "Meaning": "không khí thời trang",
-        "Collocation": null,
-        "Context": null,
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "fashion scene (n)"
-    },
-    {
-        "Meaning": "attract or tempt someone to do something, often by offering something appealing or desirable.\n\ndụ dỗ, thu hút",
-        "Collocation": null,
-        "Context": "The advertisement enticed customers with special discounts.\n→ It attracted customers by offering something appealing.",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "entice (v)"
-    },
-    {
-        "Meaning": "lasting for a long time",
-        "Collocation": "enduring appeal - something that stays popular, interesting, or loved over a long time",
-        "Context": "the enduring appeal of cartoons\n\nThe film has an enduring appeal even after 30 years.\n→ People still enjoy it decades later.\n\nClassic fashion has an enduring appeal.\n→ Timeless styles remain attractive, no matter the trends.",
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "enduring (adj)"
-    },
-    {
-        "Meaning": "attractiveness, charm, or the ability to attract interest",
-        "Collocation": null,
-        "Context": null,
-        "IPA": null,
-        "Time": "05/07/2025",
-        "Vocabulary": "appeal (n)"
+        "Context": "The old house needed stronger underpinning to prevent it from sinking.\n\nTrust is the underpinning of a successful relationship.\n→ Trust is the basic support or foundation.",
+        "IPA": "/ˈʌn.dɚˌpɪn.ɪŋ/",
+        "Time": "09/07/2025",
+        "Vocabulary": "underpinning (n)"
     }
 ]
